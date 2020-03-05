@@ -1,0 +1,115 @@
+<?php
+
+use Younify\StoreLocator\Block\Index;
+
+$collection = $block->getStoreLocation();
+$storesCount = count($collection);
+
+    if ($storesCount > 0) :
+        foreach ($collection as $store) {
+            $storeId = $store->getData('store_id');
+            $storeName = $store->getData('store_name');
+            $storeCity = $store->getData('city');
+            $storeAddress = $store->getData('address');
+            $storePhone = $store->getData('phone');
+            $storeLatitude = $store->getData('latitude');
+            $storeLongitude = $store->getData('longitude');
+            $storeMail = $store->getData('email_address');
+            $storeDescription = $store->getData('store_description');
+            $storeImageUrl = $store->getData('featured_image');
+            $storeWorkingHours = $store->getData('working_hours'); ?>
+
+            <?php if ($storeLatitude && $storeLongitude) : ?>
+                <div class="map-wrapper page-main">
+                    <div id="map" class="map-store-detail"></div>
+                </div>
+            <?php endif; ?>
+            <h1 class="location-name page-main">
+                <?= $storeName; ?>
+            </h1>
+            <div class="store-data-container page-main">
+                <div class="store-data-wrapper">
+                    <div class="location-data">
+                        <h2 class="location-name">
+                            <?= $storeName; ?>
+                        </h2>
+                        <div class="store-address">
+                            <p class="label"><?= __("Address") ?>:</p>
+                            <p><?= $storeAddress; ?></p>
+                        </div>
+                        <div class="store-phone">
+                            <p class="label"><?= __("Phone") ?>:</p>
+                            <p><?= $storePhone; ?></p>
+                        </div>
+                        <div class="store-mail">
+                            <p class="label"><?= __("E-mail") ?>:</p>
+                            <p><?= $storeMail; ?></p>
+                        </div>
+                    </div>
+                    <div class="working-time">
+                        <h4><?= __('Open'); ?></h4>
+                        <div class="days-container">
+                            <?php
+                            echo $storeWorkingHours;
+                            ?>
+                        </div>
+                    </div>
+                    <div class="store-image">
+                        <img src="<?= $storeImageUrl; ?>" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="store-details-slider">
+                <?php
+                echo $this->getLayout()
+                    ->createBlock('Magento\Cms\Block\Block')
+                    ->setBlockId('store.details.block')
+                    ->toHtml();
+                ?>
+            </div>
+            <div class="store-description-container page-main">
+                <div class="store-description">
+                    <?php echo $storeDescription; ?>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    <?php else : ?>
+        <div class="page-main">
+            <div class="example-message-warning">
+                <div>
+                    Store with required id does not exist!
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+
+    <?php if (isset($storeLatitude) && isset($storeLongitude)) : ?>
+        <script type="text/javascript">
+            var map;
+            var lat =<?php echo (float)$storeLatitude; ?>;
+            var lon =<?php echo (float)$storeLongitude; ?>;
+
+            function initMap() {
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: lat, lng: lon},
+                    zoom: 14,
+                    styles: [{
+                        stylers: [{
+                            saturation: -100
+                        }]
+                    }]
+                });
+                var marker = new google.maps.Marker({
+                    position: {lat: lat, lng: lon},
+                    map: map
+                });
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTt_KmdwIVdOChLJ4Np0SWAL8pxt0Eq3o&callback=initMap"
+                async defer></script>
+    <?php endif; ?>

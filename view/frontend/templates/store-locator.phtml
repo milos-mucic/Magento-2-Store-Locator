@@ -1,0 +1,13 @@
+<?php
+use Younify\StoreLocator\Block\Index;
+?>
+<?php 
+$templateType = $block->getTemplateType();
+
+if($templateType==='detail'){
+  echo $this->getLayout()->createBlock("Younify\StoreLocator\Block\Index")->setTemplate("Younify_StoreLocator::stores/store.phtml")->toHtml();
+}
+elseif($templateType==='locations'){
+  echo $this->getLayout()->createBlock("Younify\StoreLocator\Block\Index")->setTemplate("Younify_StoreLocator::stores/locations.phtml")->toHtml();
+}
+?>

@@ -1,0 +1,10 @@
+#menu-younify-storelocator-menu-1 > a:before {
+     content: "";
+     background: url('../images/favicon-32x32.png') no-repeat;
+     display: block;
+     font-size: 2.2rem;
+     height: 3.2rem;
+     margin-bottom: .3rem;
+     background-position: center;
+     filter: grayscale(1);
+}

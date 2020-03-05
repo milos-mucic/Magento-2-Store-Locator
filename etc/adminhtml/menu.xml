@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add 
+        id="Younify_StoreLocator::menu_1"
+        title="Younify"
+        module="Younify_StoreLocator"
+        sortOrder="10" 
+        resource="Younify_StoreLocator::menu_1" />
+        
+        <add 
+        id="Younify_StoreLocator::menu_1_1"
+        title="Store Locator"
+        module="Younify_StoreLocator"
+        sortOrder="20" 
+        parent="Younify_StoreLocator::menu_1"
+        action="routelocator/control"
+        resource="Younify_StoreLocator::menu_1_1"/>
+    </menu>
+</config>

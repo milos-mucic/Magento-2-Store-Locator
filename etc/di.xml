@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <preference for="Younify\StoreLocator\Api\Data\StoreInterface" type="Younify\StoreLocator\Model\Store" />
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="younifystorelocator_store_list_data_source" xsi:type="string">Younify\StoreLocator\Model\ResourceModel\Store\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Younify\StoreLocator\Model\ResourceModel\Store\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">younify_store_locator</argument>
+            <argument name="resourceModel" xsi:type="string">Younify\StoreLocator\Model\ResourceModel\Store</argument>
+        </arguments>
+    </virtualType>
+
+</config>

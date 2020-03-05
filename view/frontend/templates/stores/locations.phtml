@@ -1,0 +1,107 @@
+<?php
+
+use Younify\StoreLocator\Block\Index;
+
+?>
+<?php
+$stores = $block->getStoreLocation();
+$storeCoordinates = array();
+if (count($stores) > 0) : ?>
+    <div id="map" class="map-store-locations"></div>
+    <div class="store-locations-container page-main">
+        <?php
+        echo $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('usp')
+            ->toHtml();
+        ?>
+        <h1 class="locations-main-title"><?= __('Find a store nearby'); ?></h1>
+        <?php
+        foreach ($stores as $store) :
+            $storeId = $store->getData('store_id');
+            $storeName = $store->getData('store_name');
+            $storeCity = $store->getData('city');
+            $storeAddress = $store->getData('address');
+            $storePhone = $store->getData('phone');
+            $storeLatitude = $store->getData('latitude');
+            $storeLongitude = $store->getData('longitude');
+            $storeMail = $store->getData('email_address');
+            $storeDescription = $store->getData('store_description');
+            $storeImageUrl = $store->getData('featured_image');
+            $queryById = array('id' => strval($storeId));
+            $storeUrl = $this->getUrl('*/*/*', array('_current' => true, '_use_rewrite' => true, '_query' => $queryById));
+            $storeWorkingHours = $store->getData('working_hours');
+            array_push($storeCoordinates, array((float)$storeLatitude, (float)$storeLongitude));
+            ?>
+
+            <div class="store-location-container">
+                <div class="store-data">
+                    <h3>
+                        <?= __('Company in') . ' '; ?><span class="location-name"><?= $storeCity; ?></span>
+                    </h3>
+                    <div class="location-data">
+                        <div class="address-data">
+                            <p class="address"><?= $storeAddress; ?></p>
+                            <p><?= $storeCity; ?></p>
+                            <p class="phone"><?= $storePhone; ?></p>
+                            <a href="<?= $storeUrl; ?>"><?= __('View details'); ?></a>
+                        </div>
+                        <div class="opening-hours">
+                            <p class="label">Opening hours</p>
+                            <?php echo $storeWorkingHours; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="store-image">
+                    <img src="<?= $storeImageUrl; ?>" alt="">
+                </div>
+            </div>
+
+        <?php endforeach; ?>
+    </div> <!-- End of .store-locations-container page-main -->
+<?php else : ?>
+    <div class="page-main">
+        <div class="example-message-warning">
+            <div>
+                There are not saved stores!
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<?php if (count($storeCoordinates) > 0) : ?>
+    <script>
+        var map, lat, lon,
+            locations =<?php echo json_encode($storeCoordinates);?>,
+            definedCoordsLocations = locations.filter(location => parseFloat(location[0]) && parseFloat(location[1])),
+            coordsCount = definedCoordsLocations.length;
+
+        if (coordsCount) {
+            lat = definedCoordsLocations.reduce((a,b)=>a+b[0],0) / coordsCount;
+            lon = definedCoordsLocations.reduce((a,b)=>a+b[1],0) / coordsCount;
+        } else {
+            var mapEl = document.getElementById("map");
+            mapEl.remove();
+        }
+
+
+        if(definedCoordsLocations.length){
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: lat, lng: lon},
+                    zoom: 3
+                });
+
+                for (var i = 0; i < locations.length; i++) {
+                    if (locations[i][0] && locations[i][1])
+                        var marker = new google.maps.Marker({
+                            position: {lat: locations[i][0], lng: locations[i][1]},
+                            map: map
+                        });
+                }
+            }
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTt_KmdwIVdOChLJ4Np0SWAL8pxt0Eq3o&callback=initMap"
+            async defer></script>
+<?php endif; ?>
